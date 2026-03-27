@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 2%;
+    --foreground: 195 100% 90%;
+
+    --card: 195 20% 6%;
+    --card-foreground: 195 100% 90%;
+
+    --popover: 195 20% 6%;
+    --popover-foreground: 195 100% 90%;
+
+    --primary: 191 100% 50%;
+    --primary-foreground: 0 0% 2%;
+
+    --secondary: 195 15% 12%;
+    --secondary-foreground: 195 100% 80%;
+
+    --muted: 195 10% 10%;
+    --muted-foreground: 195 20% 50%;
+
+    --accent: 191 100% 50%;
+    --accent-foreground: 0 0% 2%;
+
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 191 60% 20%;
+    --input: 191 40% 15%;
+    --ring: 191 100% 50%;
+
+    --radius: 0.75rem;
+
+    --neon-glow: 0 0 8px hsl(191 100% 50% / 0.6), 0 0 20px hsl(191 100% 50% / 0.3), 0 0 40px hsl(191 100% 50% / 0.1);
+    --neon-glow-strong: 0 0 10px hsl(191 100% 50% / 0.8), 0 0 30px hsl(191 100% 50% / 0.5), 0 0 60px hsl(191 100% 50% / 0.2);
+    --glass-bg: hsla(191, 20%, 6%, 0.7);
+    --glass-border: hsla(191, 100%, 50%, 0.15);
+    --glass-border-hover: hsla(191, 100%, 50%, 0.35);
+
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 195 100% 90%;
+    --sidebar-primary: 191 100% 50%;
+    --sidebar-primary-foreground: 0 0% 2%;
+    --sidebar-accent: 195 15% 12%;
+    --sidebar-accent-foreground: 195 100% 80%;
+    --sidebar-border: 191 60% 20%;
+    --sidebar-ring: 191 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-panel:hover {
+    border-color: var(--glass-border-hover);
+    box-shadow: var(--neon-glow);
+  }
+
+  .neon-text {
+    color: hsl(191 100% 50%);
+    text-shadow: 0 0 6px hsl(191 100% 50% / 0.5), 0 0 12px hsl(191 100% 50% / 0.2);
+  }
+
+  .neon-border {
+    border-color: hsl(191 100% 50% / 0.3);
+    box-shadow: var(--neon-glow);
+  }
+
+  .status-circle {
+    @apply w-14 h-14 rounded-full flex items-center justify-center glass-panel cursor-pointer;
+    transition: all 0.3s ease;
+  }
+
+  .status-circle:hover {
+    box-shadow: var(--neon-glow-strong);
+    transform: scale(1.08);
+  }
+
+  .dock-button {
+    @apply px-4 py-2 rounded-lg glass-panel text-xs uppercase tracking-widest;
+    color: hsl(191 100% 50% / 0.7);
+    transition: all 0.3s ease;
+  }
+
+  .dock-button:hover {
+    color: hsl(191 100% 50%);
+    box-shadow: var(--neon-glow);
+    background: hsla(191, 100%, 50%, 0.08);
+  }
+
+  .dock-button.active {
+    color: hsl(191 100% 50%);
+    box-shadow: var(--neon-glow-strong);
+    background: hsla(191, 100%, 50%, 0.12);
+    border-color: hsl(191 100% 50% / 0.5);
+  }
+}
+
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sine-wave {
+  0% { d: path("M0,50 Q25,30 50,50 T100,50 T150,50 T200,50"); }
+  50% { d: path("M0,50 Q25,70 50,50 T100,50 T150,50 T200,50"); }
+  100% { d: path("M0,50 Q25,30 50,50 T100,50 T150,50 T200,50"); }
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0.8; }
+  100% { transform: translateY(-8px); opacity: 1; }
+}
