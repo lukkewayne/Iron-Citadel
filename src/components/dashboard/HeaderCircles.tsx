@@ -54,12 +54,17 @@ const HeaderCircles = () => {
   }, []);
 
   useEffect(() => {
-    const updateBattery = (batt: any) => {
+    interface BatteryManager extends EventTarget {
+      level: number;
+      addEventListener(type: 'levelchange', listener: EventListener): void;
+    }
+
+    const updateBattery = (batt: BatteryManager) => {
       setEnergy(Math.round(batt.level * 100));
     };
 
     if ('getBattery' in navigator) {
-      (navigator as any).getBattery().then((batt: any) => {
+      (navigator as unknown as { getBattery: () => Promise<BatteryManager> }).getBattery().then((batt) => {
         updateBattery(batt);
         batt.addEventListener('levelchange', () => updateBattery(batt));
       });

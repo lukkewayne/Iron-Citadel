@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Activity, Battery, Cpu, HardDrive, MemoryStick } from "lucide-react";
+import { Activity, Cpu, HardDrive, MemoryStick } from "lucide-react";
 
 const SineWaveCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -43,9 +43,13 @@ const SineWaveCanvas = () => {
       ctx.scale(2, 2);
     };
 
+    window.addEventListener("resize", resize);
     resize();
     draw();
-    return () => cancelAnimationFrame(animRef.current);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
   return <canvas ref={canvasRef} className="w-full h-28" />;
@@ -71,42 +75,6 @@ const MetricBar = ({ label, value, icon: Icon }: { label: string; value: number;
 
 const SystemHealth = () => {
   const [metrics, setMetrics] = useState({ cpu: 42, mem: 67, disk: 34 });
-  const [energy, setEnergy] = useState(100);
-  const [ping, setPing] = useState(0);
-
-  useEffect(() => {
-    const checkPing = async () => {
-      const start = Date.now();
-      try {
-        // Fazemos uma requisição rápida para um servidor confiável
-        await fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-cache' });
-        const end = Date.now();
-        setPing(end - start);
-      } catch (error) {
-        setPing(0); // Sistema offline
-      }
-    };
-
-    // Mede o pulso inicial e depois a cada 10 segundos
-    checkPing();
-    const interval = setInterval(checkPing, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    // Função para atualizar o nível da bateria
-    const updateBattery = (batt: any) => {
-      setEnergy(Math.round(batt.level * 100));
-    };
-
-    if ('getBattery' in navigator) {
-      (navigator as any).getBattery().then((batt: any) => {
-        updateBattery(batt);
-        // Ouve mudanças no nível enquanto o site está aberto
-        batt.addEventListener('levelchange', () => updateBattery(batt));
-      });
-    }
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -130,16 +98,11 @@ const SystemHealth = () => {
         <MetricBar label="CPU" value={metrics.cpu} icon={Cpu} />
         <MetricBar label="MEM" value={metrics.mem} icon={MemoryStick} />
         <MetricBar label="DISK" value={metrics.disk} icon={HardDrive} />
-        <MetricBar label="BATT" value={energy} icon={Battery} />
       </div>
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-primary animate-pulse-neon" />
           <span className="text-[10px] text-muted-foreground">All systems nominal</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Activity className="w-3 h-3 text-primary opacity-70" />
-          <span className="text-[10px] text-primary">{ping} ms</span>
         </div>
       </div>
     </div>

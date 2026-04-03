@@ -55,9 +55,10 @@ const InsightHub = () => {
       const response = await result.response;
       
       setMessages(prev => [...prev, { role: "ai", text: response.text() }]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro no Gemini:", error);
-      setMessages(prev => [...prev, { role: "ai", text: `Senhor, encontrei um erro técnico nas comunicações. Arquivo de log: ${error.message || String(error)}` }]);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setMessages(prev => [...prev, { role: "ai", text: `Senhor, encontrei um erro técnico nas comunicações. Arquivo de log: ${errorMessage}` }]);
     } finally {
       setIsLoading(false);
     }
